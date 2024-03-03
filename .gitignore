@@ -1,2 +1,5 @@
-
-testnewignore
+.classpath
+.project
+.settings/
+target/
+.idea
