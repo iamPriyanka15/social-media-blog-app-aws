@@ -22,10 +22,14 @@ public class PostController {
        return new ResponseEntity(savedPostDto, HttpStatus.CREATED);
 
     }
-
+    //pagination and sorting
     @GetMapping
-    public List<PostDto> getAllPosts(){
-       return postService.getAllPosts();
+    public List<PostDto> getAllPosts(
+         @RequestParam(value = "pageNo", defaultValue = "0", required = false)   int pageNo,
+         @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+    ){
+
+        return postService.getAllPosts(pageNo,pageSize);
     }
 
     @GetMapping("/{id}")
