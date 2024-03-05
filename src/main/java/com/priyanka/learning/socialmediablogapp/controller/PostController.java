@@ -27,11 +27,13 @@ public class PostController {
     @GetMapping
     public PostResponse getAllPosts(
          @RequestParam(value = "pageNo", defaultValue = "0", required = false)   int pageNo,
-         @RequestParam(value = "pageSize", defaultValue = "4", required = false) int pageSize
+         @RequestParam(value = "pageSize", defaultValue = "4", required = false) int pageSize,
+         @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
     ){
 
-        return postService.getAllPosts(pageNo,pageSize);
+        return postService.getAllPosts(pageNo,pageSize, sortBy);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable long id){
