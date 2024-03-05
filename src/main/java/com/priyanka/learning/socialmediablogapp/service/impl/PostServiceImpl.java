@@ -6,6 +6,7 @@ import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundExcept
 import com.priyanka.learning.socialmediablogapp.repository.PostRepository;
 import com.priyanka.learning.socialmediablogapp.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,13 @@ public class PostServiceImpl implements PostService {
     public List<PostDto> getAllPosts(int pageNo, int pageSize) {
 
        Pageable pageable = PageRequest.of(pageNo,pageSize);
-       List<Post> allPosts = postRepository.findAll();
+       //List<Post> allPosts = postRepository.findAll();
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<Post> postList = posts.getContent();
+
         //Map Post Entity to PostDTO
-       List<PostDto> postDtoList = allPosts.stream().map(post -> mapEntityToDto(post)).collect(Collectors.toList());
+       //List<PostDto> postDtoList = allPosts.stream().map(post -> mapEntityToDto(post)).collect(Collectors.toList());
+        List<PostDto> postDtoList = postList.stream().map(post -> mapEntityToDto(post)).collect(Collectors.toList());
         return postDtoList;
     }
 
