@@ -3,6 +3,7 @@ package com.priyanka.learning.socialmediablogapp.service.impl;
 import com.priyanka.learning.socialmediablogapp.dto.PostDto;
 import com.priyanka.learning.socialmediablogapp.entity.Post;
 import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundException;
+import com.priyanka.learning.socialmediablogapp.payload.PostResponse;
 import com.priyanka.learning.socialmediablogapp.repository.PostRepository;
 import com.priyanka.learning.socialmediablogapp.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize) {
 
        Pageable pageable = PageRequest.of(pageNo,pageSize);
        //List<Post> allPosts = postRepository.findAll();
@@ -46,7 +47,21 @@ public class PostServiceImpl implements PostService {
         //Map Post Entity to PostDTO
        //List<PostDto> postDtoList = allPosts.stream().map(post -> mapEntityToDto(post)).collect(Collectors.toList());
         List<PostDto> postDtoList = postList.stream().map(post -> mapEntityToDto(post)).collect(Collectors.toList());
-        return postDtoList;
+
+        //customize the post Resource Response
+        PostResponse postResponse = PostResponse
+                .builder()
+                .content(postDtoList)
+                .pageNo(posts.getNumber())
+                .pageSize(posts.getSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .isLastPage(posts.isLast())
+                .build();
+
+
+
+        return postResponse;
     }
 
     @Override
