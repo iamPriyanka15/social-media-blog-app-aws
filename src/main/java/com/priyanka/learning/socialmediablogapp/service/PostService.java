@@ -1,6 +1,7 @@
 package com.priyanka.learning.socialmediablogapp.service;
 
 import com.priyanka.learning.socialmediablogapp.dto.PostDto;
+import com.priyanka.learning.socialmediablogapp.payload.PostResponse;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface PostService {
 
   PostDto  createPost(PostDto postDto);
 
-  List<PostDto> getAllPosts(int pageNo, int pageSize);
+  PostResponse getAllPosts(int pageNo, int pageSize);
 
   PostDto getPostById(Long id);
 
