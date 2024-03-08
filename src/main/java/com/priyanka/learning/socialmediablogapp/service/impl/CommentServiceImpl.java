@@ -10,6 +10,9 @@ import com.priyanka.learning.socialmediablogapp.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
@@ -32,6 +35,14 @@ public class CommentServiceImpl implements CommentService {
         CommentDto saveCommentDto = mapEntityToDto(savedCommentEntity);
 
         return saveCommentDto;
+    }
+
+    @Override
+    public List<CommentDto> getAllCommentsByPostId(long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        //Map Entity to Dto
+        List<CommentDto> commentDtoList = comments.stream().map(comment -> mapEntityToDto(comment)).collect(Collectors.toList());
+        return commentDtoList;
     }
 
     private CommentDto mapEntityToDto(Comment savedCommentEntity) {
