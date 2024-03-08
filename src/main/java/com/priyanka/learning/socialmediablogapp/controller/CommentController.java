@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 public class CommentController {
@@ -20,4 +22,15 @@ public class CommentController {
 
         return new ResponseEntity<>(savedCommentDto, HttpStatus.CREATED);
     }
+
+    //Get all Comments - /api/v1/posts/{postId}/comments
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<CommentDto>> fetchAllCommentsByPostId(@PathVariable("postId") Long postId){
+        List<CommentDto> commentDtoList = commentService.getAllCommentsByPostId(postId);
+        return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
+
+    }
+
+
+
 }
