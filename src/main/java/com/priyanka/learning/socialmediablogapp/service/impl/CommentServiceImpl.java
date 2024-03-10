@@ -1,6 +1,7 @@
 package com.priyanka.learning.socialmediablogapp.service.impl;
 
 import com.priyanka.learning.socialmediablogapp.dto.CommentDto;
+import com.priyanka.learning.socialmediablogapp.dto.PatchDto;
 import com.priyanka.learning.socialmediablogapp.entity.Comment;
 import com.priyanka.learning.socialmediablogapp.entity.Post;
 import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundException;
@@ -86,6 +87,33 @@ public class CommentServiceImpl implements CommentService {
         return updatedcommentDto;
     }
 
+    @Override
+    public CommentDto updateCommentPartiallyByPostIdAndCommentId(Long postId, Long id, PatchDto patchDto) {
+
+        //Fetch Post
+        Post postEntity = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","id",String.valueOf(postId)));
+        //Fetch Comment by CommentId
+        Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
+        //validate comment belongs to that particular Post
+        if(!commentEntity.getPost().getId().equals(postEntity.getId())){
+            throw new RuntimeException("Bad request Comment Not Found");
+        }
+
+
+        partiallyUpdateCommentEntity(patchDto, commentEntity);
+
+        //save Updated Comment Entity
+        Comment updatedCommentEntity = commentRepository.save(commentEntity);
+
+        //Map Comment Entity to DTO
+        CommentDto updatedcommentDto = mapEntityToDto(commentEntity);
+
+        return updatedcommentDto;
+        
+    }
+
+
+
     private CommentDto mapEntityToDto(Comment savedCommentEntity) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(savedCommentEntity.getId());
@@ -102,6 +130,20 @@ public class CommentServiceImpl implements CommentService {
         comment.setBody(commentDto.getBody());
         return comment;
 
+    }
+
+    private void partiallyUpdateCommentEntity(PatchDto patchDto, Comment commentEntity) {
+        switch (patchDto.getKey()){
+            case "Email" :
+                commentEntity.setEmail(patchDto.getValue());
+                break;
+            case "Body" :
+                commentEntity.setBody(patchDto.getValue());
+                break;
+            case "Name" :
+                commentEntity.setName(patchDto.getValue());
+                break;
+        }
     }
 
 

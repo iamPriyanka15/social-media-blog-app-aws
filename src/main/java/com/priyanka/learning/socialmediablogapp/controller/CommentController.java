@@ -1,6 +1,7 @@
 package com.priyanka.learning.socialmediablogapp.controller;
 
 import com.priyanka.learning.socialmediablogapp.dto.CommentDto;
+import com.priyanka.learning.socialmediablogapp.dto.PatchDto;
 import com.priyanka.learning.socialmediablogapp.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,26 @@ public class CommentController {
                                                                          @PathVariable("id") Long id,
                                                                          @RequestBody CommentDto commentDto){
         CommentDto updatedCommentDto = commentService.updateCommentByPostIdAndCommentId(postId,id, commentDto);
+        return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);
+
+    }
+
+    //Delete Comment By CommentId and PostId - /api/v1/posts/{postId}/comments/{id}
+
+
+    //Patch Comment By CommentId and PostId
+
+    @PatchMapping("/posts/{postId}/comments/{id}")
+    public ResponseEntity<CommentDto> partiallyupdateCommentsByPostIdAndCommentId(@PathVariable("postId") Long postId,
+                                                                                  @PathVariable("id") Long id,
+                                                                                  @RequestBody PatchDto patchDto){
+        CommentDto updatedCommentDto = null;
+        if(patchDto.getOperation().equalsIgnoreCase("update")){
+            updatedCommentDto = commentService.updateCommentPartiallyByPostIdAndCommentId(postId,id, patchDto);
+        }else if(patchDto.getOperation().equalsIgnoreCase("delete")){
+            // updatedCommentDto = commentService.deleteParticularField(postId,id, patchDto);
+        }
+
         return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);
 
     }
