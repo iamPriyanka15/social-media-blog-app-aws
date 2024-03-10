@@ -45,6 +45,47 @@ public class CommentServiceImpl implements CommentService {
         return commentDtoList;
     }
 
+    @Override
+    public CommentDto getCommentByPostIdAndCommentId(long postId, long id) {
+        //Fetch Post
+        Post postEntity = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","id",String.valueOf(postId)));
+        //Fetch Comment by CommentId
+        Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
+        //validate comment belongs to that particular Post
+        if(!commentEntity.getPost().getId().equals(postEntity.getId())){
+            throw new RuntimeException("Bad request Comment Not Found");
+        }
+        //Map Comment Entity to DTO
+        CommentDto commentDto = mapEntityToDto(commentEntity);
+        return commentDto;
+    }
+
+    @Override
+    public CommentDto updateCommentByPostIdAndCommentId(long postId, long id, CommentDto commentDto) {
+
+        //Fetch Post
+        Post postEntity = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","id",String.valueOf(postId)));
+        //Fetch Comment by CommentId
+        Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
+        //validate comment belongs to that particular Post
+        if(!commentEntity.getPost().getId().equals(postEntity.getId())){
+            throw new RuntimeException("Bad request Comment Not Found");
+        }
+
+        // Update old comment Details with new Comment Dto
+        commentEntity.setName(commentDto.getName());
+        commentEntity.setEmail(commentDto.getEmail());
+        commentEntity.setBody(commentDto.getBody());
+
+        //save Updated Comment Entity
+        Comment updatedCommentEntity = commentRepository.save(commentEntity);
+
+        //Map Comment Entity to DTO
+        CommentDto updatedcommentDto = mapEntityToDto(commentEntity);
+
+        return updatedcommentDto;
+    }
+
     private CommentDto mapEntityToDto(Comment savedCommentEntity) {
         CommentDto commentDto = new CommentDto();
         commentDto.setId(savedCommentEntity.getId());
