@@ -33,9 +33,20 @@ public class CommentController {
 
     //Get Comment By CommentId and PostId - /api/v1/posts/{postId}/comments/{id}
     @GetMapping("/posts/{postId}/comments/{id}")
-    public ResponseEntity<List<CommentDto>> fetchCommentsByPostIdAndCommentId(@PathVariable("postId") Long postId,@PathVariable("id") Long id){
-        List<CommentDto> commentDtoList = commentService.getAllCommentsByPostId(postId);
-        return new ResponseEntity<>(commentDtoList, HttpStatus.OK);
+    public ResponseEntity<CommentDto> fetchCommentsByPostIdAndCommentId(@PathVariable("postId") Long postId,@PathVariable("id") Long id){
+        CommentDto commentDto = commentService.getCommentByPostIdAndCommentId(postId,id);
+        return new ResponseEntity<>(commentDto, HttpStatus.OK);
+
+    }
+
+    //PUT Update Comment By PostId and CommentId - /api/v1/posts/{postId}/comments/{id}
+
+    @PutMapping("/posts/{postId}/comments/{id}")
+    public ResponseEntity<CommentDto> updateCommentsByPostIdAndCommentId(@PathVariable("postId") Long postId,
+                                                                         @PathVariable("id") Long id,
+                                                                         @RequestBody CommentDto commentDto){
+        CommentDto updatedCommentDto = commentService.updateCommentByPostIdAndCommentId(postId,id, commentDto);
+        return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);
 
     }
 
