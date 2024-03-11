@@ -6,6 +6,7 @@ import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundExcept
 import com.priyanka.learning.socialmediablogapp.payload.PostResponse;
 import com.priyanka.learning.socialmediablogapp.repository.PostRepository;
 import com.priyanka.learning.socialmediablogapp.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,10 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public PostDto createPost(PostDto postDto) {
         //Map PostDTO to Post Entity
@@ -101,21 +106,28 @@ public class PostServiceImpl implements PostService {
     }
 
     private Post mapDtoToEntity(PostDto postDto) {
-        Post post = new Post();
+
+        //Model Mapper - Map source to Target Class
+        //Mainly useful in DTO to Entity Mapping and vice versa
+
+        return modelMapper.map(postDto,Post.class);
+
+       /* Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setDescription(postDto.getDescription());
-        return post;
+        return post;*/
     }
 
     private PostDto mapEntityToDto(Post post) {
+        return modelMapper.map(post, PostDto.class);
 
-        PostDto postDto = new PostDto();
+       /* PostDto postDto = new PostDto();
         postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setDescription(post.getDescription());
-        return postDto;
+        return postDto;*/
     }
 
 }

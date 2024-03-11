@@ -8,6 +8,8 @@ import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundExcept
 import com.priyanka.learning.socialmediablogapp.repository.CommentRepository;
 import com.priyanka.learning.socialmediablogapp.repository.PostRepository;
 import com.priyanka.learning.socialmediablogapp.service.CommentService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public CommentDto createComment(long postId, CommentDto commentDto) {
@@ -115,24 +119,36 @@ public class CommentServiceImpl implements CommentService {
 
 
     private CommentDto mapEntityToDto(Comment savedCommentEntity) {
+
+        return modelMapper.map(savedCommentEntity, CommentDto.class);
+
+        /*
         CommentDto commentDto = new CommentDto();
         commentDto.setId(savedCommentEntity.getId());
         commentDto.setName(savedCommentEntity.getName());
         commentDto.setBody(savedCommentEntity.getBody());
         commentDto.setEmail(savedCommentEntity.getEmail());
-        return commentDto;
+        return commentDto;*/
     }
 
     private Comment mapDTOEntity(CommentDto commentDto) {
+
+        return modelMapper.map(commentDto,Comment.class);
+
+        /*
         Comment comment = new Comment();
         comment.setName(commentDto.getName());
         comment.setEmail(commentDto.getEmail());
         comment.setBody(commentDto.getBody());
-        return comment;
+        return comment;*/
 
     }
 
     private void partiallyUpdateCommentEntity(PatchDto patchDto, Comment commentEntity) {
+
+        String key =patchDto.getKey();
+
+
         switch (patchDto.getKey()){
             case "Email" :
                 commentEntity.setEmail(patchDto.getValue());
