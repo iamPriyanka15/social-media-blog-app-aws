@@ -4,6 +4,7 @@ import com.priyanka.learning.socialmediablogapp.dto.CommentDto;
 import com.priyanka.learning.socialmediablogapp.dto.PatchDto;
 import com.priyanka.learning.socialmediablogapp.entity.Comment;
 import com.priyanka.learning.socialmediablogapp.entity.Post;
+import com.priyanka.learning.socialmediablogapp.exception.BlogApIException;
 import com.priyanka.learning.socialmediablogapp.exception.ResourceNotFoundException;
 import com.priyanka.learning.socialmediablogapp.repository.CommentRepository;
 import com.priyanka.learning.socialmediablogapp.repository.PostRepository;
@@ -11,6 +12,7 @@ import com.priyanka.learning.socialmediablogapp.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
         //validate comment belongs to that particular Post
         if(!commentEntity.getPost().getId().equals(postEntity.getId())){
-            throw new RuntimeException("Bad request Comment Not Found");
+            throw new BlogApIException(HttpStatus.BAD_REQUEST ,"Bad Request Comment Not Found in Post");
         }
         //Map Comment Entity to DTO
         CommentDto commentDto = mapEntityToDto(commentEntity);
@@ -74,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
         //validate comment belongs to that particular Post
         if(!commentEntity.getPost().getId().equals(postEntity.getId())){
-            throw new RuntimeException("Bad request Comment Not Found");
+            throw new BlogApIException(HttpStatus.BAD_REQUEST ,"Bad Request Comment Not Found in Post");
         }
 
         // Update old comment Details with new Comment Dto
@@ -100,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
         Comment commentEntity = commentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("comment","id",String.valueOf(id)));
         //validate comment belongs to that particular Post
         if(!commentEntity.getPost().getId().equals(postEntity.getId())){
-            throw new RuntimeException("Bad request Comment Not Found");
+            throw new BlogApIException(HttpStatus.BAD_REQUEST ,"Bad Request Comment Not Found in Post");
         }
 
 
