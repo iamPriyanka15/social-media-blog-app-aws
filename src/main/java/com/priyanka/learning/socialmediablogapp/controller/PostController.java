@@ -3,6 +3,7 @@ package com.priyanka.learning.socialmediablogapp.controller;
 import com.priyanka.learning.socialmediablogapp.dto.PostDto;
 import com.priyanka.learning.socialmediablogapp.payload.PostResponse;
 import com.priyanka.learning.socialmediablogapp.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> createPost(@RequestBody @Valid PostDto postDto){
        PostDto savedPostDto = postService.createPost(postDto);
        return new ResponseEntity(savedPostDto, HttpStatus.CREATED);
 
@@ -46,7 +47,7 @@ public class PostController {
 
     @PutMapping("/{id}")
     //@PatchMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable long id){
+    public ResponseEntity<PostDto> updatePost(@RequestBody @Valid PostDto postDto, @PathVariable long id){
        PostDto updatedPostResponse = postService.updatePost(postDto, id);
        return ResponseEntity.ok(updatedPostResponse);
     }

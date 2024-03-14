@@ -3,6 +3,7 @@ package com.priyanka.learning.socialmediablogapp.controller;
 import com.priyanka.learning.socialmediablogapp.dto.CommentDto;
 import com.priyanka.learning.socialmediablogapp.dto.PatchDto;
 import com.priyanka.learning.socialmediablogapp.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentDto> createComment(@PathVariable("postId") long postId, @RequestBody CommentDto commentDto){
+    public ResponseEntity<CommentDto> createComment(@PathVariable("postId") long postId, @RequestBody @Valid CommentDto commentDto){
 
         CommentDto savedCommentDto = commentService.createComment(postId, commentDto);
 
@@ -45,7 +46,7 @@ public class CommentController {
     @PutMapping("/posts/{postId}/comments/{id}")
     public ResponseEntity<CommentDto> updateCommentsByPostIdAndCommentId(@PathVariable("postId") Long postId,
                                                                          @PathVariable("id") Long id,
-                                                                         @RequestBody CommentDto commentDto){
+                                                                         @RequestBody @Valid CommentDto commentDto){
         CommentDto updatedCommentDto = commentService.updateCommentByPostIdAndCommentId(postId,id, commentDto);
         return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);
 
