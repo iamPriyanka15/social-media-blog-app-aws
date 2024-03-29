@@ -19,11 +19,12 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PostDto> createPost(@RequestBody @Valid PostDto postDto){
        PostDto savedPostDto = postService.createPost(postDto);
-       return new ResponseEntity(savedPostDto, HttpStatus.CREATED);
+       return new ResponseEntity( savedPostDto, HttpStatus.CREATED);
 
     }
     //pagination and sorting
