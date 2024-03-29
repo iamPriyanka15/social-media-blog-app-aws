@@ -19,10 +19,14 @@ public class SocialMediaCustomizedUserDetailService implements UserDetailsServic
     private UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        //Fetch User by username or email
        User userEntity = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with Email or Username :: "+ usernameOrEmail));
+
+       //Convert User role to granted authority
        Set<GrantedAuthority> grantedAuthoritySet = userEntity
                .getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+       //Return spring specific user with authority
         return new org.springframework.security.core.userdetails.User(userEntity.getEmail(), userEntity.getPassword(), grantedAuthoritySet);
     }
 }
